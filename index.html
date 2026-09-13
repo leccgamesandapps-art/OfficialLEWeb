@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OfficialLEWeb – LEID Login / Register</title>
+  <meta name="description" content="OfficialLEWeb – LEID Unified Platform. Shared login for LEMODZ and LEVoiceCall." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="auth-page">
+  <div class="auth-container">
+    <div class="brand">
+      <h1 class="brand-title">OfficialLEWeb</h1>
+      <p class="brand-sub">LEID Unified Platform · Shared across LEMODZ &amp; LEVoiceCall</p>
+    </div>
+    <div class="tabs">
+      <button type="button" id="tab-login" class="tab active" data-tab="login">Login</button>
+      <button type="button" id="tab-register" class="tab" data-tab="register">Register</button>
+    </div>
+    <div id="login-panel" class="panel active">
+      <form id="login-form" autocomplete="on">
+        <label for="login-leid">LEID</label>
+        <input type="text" id="login-leid" name="leid" placeholder="Enter your LEID / Username" required autocomplete="username" />
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" name="password" placeholder="Enter password" required autocomplete="current-password" />
+        <button type="submit" class="btn primary">Sign In</button>
+      </form>
+      <div class="divider"><span>or</span></div>
+      <button type="button" class="btn facebook" id="btn-fb-login">Continue with Facebook</button>
+      <p class="hint">If your Facebook is already linked, you will sign in automatically. Otherwise register first or use Facebook to create your LEID.</p>
+    </div>
+    <div id="register-panel" class="panel">
+      <form id="register-form" autocomplete="on">
+        <label for="reg-leid">LEID / Username</label>
+        <input type="text" id="reg-leid" name="leid" placeholder="Choose your LEID / Username" required autocomplete="username" />
+        <label for="reg-password">Password</label>
+        <input type="password" id="reg-password" name="password" placeholder="Create a password" required minlength="4" autocomplete="new-password" />
+        <label for="reg-confirm">Confirm Password</label>
+        <input type="password" id="reg-confirm" name="confirm" placeholder="Confirm password" required minlength="4" autocomplete="new-password" />
+        <button type="submit" class="btn primary">Create Account</button>
+      </form>
+      <div class="divider"><span>or</span></div>
+      <button type="button" class="btn facebook" id="btn-fb-register">Sign up using Facebook</button>
+      <p class="hint">Facebook name becomes your LEID. Same Facebook account works on LEMODZ and LEVoiceCall.</p>
+    </div>
+    <div id="message" class="message" hidden></div>
+  </div>
+  <p class="footer-links">
+    <a href="main/Privacy.html">Privacy Policy</a>
+    <span>·</span>
+    <a href="main/ToS.html">Terms of Service</a>
+  </p>
+  <div id="fb-root"></div>
+  <script>
+    window.fbAsyncInit = function () {
+      FB.init({ appId: "2338993963576572", cookie: true, xfbml: false, version: "v21.0" });
+      window.fbReady = true;
+    };
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, "script", "facebook-jssdk"));
+  </script>
+  <script src="auth.js"></script>
+</body>
+</html>
