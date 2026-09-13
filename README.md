@@ -1,20 +1,16 @@
 # OfficialLEWeb
 
-LEID Unified Platform — shared auth hub for **LEMODZ** and **LEVoiceCall**.
+LEID Unified Platform – auth hub for LEMODZ and LEVoiceCall.
 
 - Live: https://officialleweb.vercel.app
-- Facebook App ID: `2338993963576572` (LEID ACCOUNT)
 - Stack: pure HTML + CSS + JS
+- Facebook App: LEID ACCOUNT `2338993963576572`
+- Identity: LEAI / LEStudio
 
 ## Pages
-- `/` — Login / Register
-- `/main/Main.html` — Dashboard (LEVoiceCall + LEMODZ connection)
-- `/main/Privacy.html` — Privacy Policy
-- `/main/ToS.html` — Terms of Service
+- `index.html` – Register / Login
+- `main/Main.html` – Dashboard
+- `main/Privacy.html` / `main/ToS.html` – Legal
 
 ## SSO
-Other LE sites use:
-```
-https://officialleweb.vercel.app/?return_to={encoded_url}&app=...
-```
-After login, redirects with `?leid=&name=&fb=&from=officialleweb`.
+Other sites redirect to `/?return_to=ENCODED_URL&app=...` and receive `?leid=&name=&fb=&from=officialleweb`.

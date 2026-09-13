@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – OfficialLEWeb</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="dash-body">
+  <header class="top-nav">
+    <button type="button" class="icon-btn" id="menu-btn" aria-label="Open menu">☰</button>
+    <div class="nav-title">OfficialLEWeb</div>
+    <button type="button" class="profile-chip" id="profile-btn" aria-label="Profile">
+      <span id="nav-leid">…</span>
+    </button>
+  </header>
+  <div class="side-overlay" id="side-overlay"></div>
+  <aside class="side-menu" id="side-menu" aria-hidden="true">
+    <p style="font-weight:700;margin-bottom:12px;color:#c4b5fd">Menu</p>
+    <a class="side-link active" href="Main.html">Home</a>
+    <a class="side-link" href="#about" id="link-about">About</a>
+    <a class="side-link" href="Privacy.html">Privacy Policy</a>
+    <a class="side-link" href="ToS.html">Terms of Service</a>
+    <button type="button" class="side-link danger" id="menu-logout">Logout</button>
+  </aside>
+  <main class="dash-main">
+    <h1 class="welcome">Welcome, <span id="welcome-leid">LEID</span></h1>
+    <p style="color:var(--muted);font-size:0.9rem;margin-bottom:8px">LEID Unified Platform · LEAI / LEStudio</p>
+    <section class="section-card" id="sec-levc">
+      <h3>LEVoiceCall <span class="badge off" id="badge-levc">Not Connected</span></h3>
+      <p style="color:var(--muted);font-size:0.88rem">Independent voice &amp; video rooms.</p>
+      <a class="btn-sm" href="https://le-voice-call.vercel.app/" target="_blank" rel="noopener">Open LEVoiceCall</a>
+      <button type="button" class="btn-sm primary" id="btn-connect-levc">Connect LEID to LEVoiceCall</button>
+      <a class="btn-sm" href="https://le-voice-call.vercel.app/main/main.html" target="_blank" rel="noopener">Go to LEVoiceCall Main</a>
+    </section>
+    <section class="section-card" id="sec-lemodz">
+      <h3>LEMODZ <span class="badge off" id="badge-lemodz">Not Connected</span></h3>
+      <p style="color:var(--muted);font-size:0.88rem">Minecraft Bedrock mods library.</p>
+      <a class="btn-sm" href="https://lemodz-official-site.vercel.app/main.html" target="_blank" rel="noopener">Open LEMODZ</a>
+      <button type="button" class="btn-sm primary" id="btn-connect-lemodz">Connect LEID to LEMODZ</button>
+    </section>
+    <section class="section-card" id="about">
+      <h3>About</h3>
+      <p style="color:var(--muted);font-size:0.9rem;line-height:1.55">
+        OfficialLEWeb is the LEID identity hub for LEStudio sites. One LEID works on LEMODZ and LEVoiceCall.
+        Facebook Login uses Meta App <strong>LEID ACCOUNT</strong> (App ID <code>2338993963576572</code>).
+        Same App ID is configured on all three sites for consistent identity. LEAI / LEStudio.
+      </p>
+    </section>
+  </main>
+  <div class="profile-modal" id="profile-modal" role="dialog" aria-label="Profile">
+    <div class="profile-card">
+      <h3 style="margin-bottom:10px">Profile</h3>
+      <p><strong>LEID:</strong> <span id="p-leid">—</span></p>
+      <p><strong>Facebook linked:</strong> <span id="p-fb">—</span></p>
+      <p><strong>Facebook ID:</strong> <span id="p-fbid">—</span></p>
+      <p><strong>LEVoiceCall:</strong> <span id="p-levc">—</span></p>
+      <p><strong>LEMODZ:</strong> <span id="p-lemodz">—</span></p>
+      <button type="button" class="btn primary" id="profile-close" style="margin-top:16px">Close</button>
+      <button type="button" class="btn" id="profile-logout" style="margin-top:8px;background:transparent;border:1px solid var(--border);color:var(--error)">Logout</button>
+    </div>
+  </div>
+  <script>
+    (function () {
+      function getSession() {
+        try { return JSON.parse(localStorage.getItem("officialleweb_session") || "null"); } catch { return null; }
+      }
+      function clearSession() {
+        localStorage.removeItem("officialleweb_session");
+        localStorage.removeItem("leid_session");
+        localStorage.removeItem("officialleweb_user");
+      }
+      function getLinks() {
+        try { return JSON.parse(localStorage.getItem("officialleweb_links") || "{}"); } catch { return {}; }
+      }
+      function saveLinks(o) { localStorage.setItem("officialleweb_links", JSON.stringify(o)); }
+      var session = getSession();
+      if (!session || !session.leid) {
+        window.location.replace("../index.html");
+        return;
+      }
+      document.getElementById("nav-leid").textContent = session.leid;
+      document.getElementById("welcome-leid").textContent = session.leid;
+      document.getElementById("p-leid").textContent = session.leid;
+      document.getElementById("p-fb").textContent = session.facebookId ? "Yes" : "No";
+      document.getElementById("p-fbid").textContent = session.facebookId || "—";
+      var links = getLinks();
+      var key = String(session.leid).toLowerCase();
+      if (!links[key]) links[key] = {};
+      function refreshBadges() {
+        var levc = !!(links[key] && links[key].levoicecall);
+        var lemodz = !!(links[key] && links[key].lemodz);
+        var b1 = document.getElementById("badge-levc");
+        var b2 = document.getElementById("badge-lemodz");
+        b1.textContent = levc ? "Connected" : "Not Connected";
+        b1.className = "badge " + (levc ? "on" : "off");
+        b2.textContent = lemodz ? "Connected" : "Not Connected";
+        b2.className = "badge " + (lemodz ? "on" : "off");
+        document.getElementById("p-levc").textContent = levc ? "Connected" : "Not Connected";
+        document.getElementById("p-lemodz").textContent = lemodz ? "Connected" : "Not Connected";
+      }
+      refreshBadges();
+      document.getElementById("btn-connect-levc").onclick = function () {
+        links[key].levoicecall = true;
+        links[key].facebookId = session.facebookId || links[key].facebookId || null;
+        saveLinks(links);
+        try {
+          localStorage.setItem("levc_leid_link", JSON.stringify({
+            leid: session.leid, facebookId: session.facebookId, linkedAt: new Date().toISOString(), site: "levoicecall"
+          }));
+        } catch (e) {}
+        refreshBadges();
+        alert("LEID linked to LEVoiceCall on this device. Open LEVoiceCall and use Continue with LEID if needed.");
+      };
+      document.getElementById("btn-connect-lemodz").onclick = function () {
+        links[key].lemodz = true;
+        links[key].facebookId = session.facebookId || links[key].facebookId || null;
+        saveLinks(links);
+        refreshBadges();
+        alert("LEID linked to LEMODZ on this device. Open LEMODZ and use Continue with OfficialLEWeb LEID.");
+      };
+      function openMenu() {
+        document.getElementById("side-menu").classList.add("open");
+        document.getElementById("side-overlay").classList.add("show");
+      }
+      function closeMenu() {
+        document.getElementById("side-menu").classList.remove("open");
+        document.getElementById("side-overlay").classList.remove("show");
+      }
+      document.getElementById("menu-btn").onclick = openMenu;
+      document.getElementById("side-overlay").onclick = closeMenu;
+      function doLogout() {
+        clearSession();
+        try { if (typeof FB !== "undefined" && FB.getAuthResponse()) FB.logout(function () {}); } catch (e) {}
+        window.location.replace("../index.html");
+      }
+      document.getElementById("menu-logout").onclick = doLogout;
+      document.getElementById("profile-logout").onclick = doLogout;
+      document.getElementById("profile-btn").onclick = function () {
+        document.getElementById("profile-modal").classList.add("show");
+      };
+      document.getElementById("profile-close").onclick = function () {
+        document.getElementById("profile-modal").classList.remove("show");
+      };
+    })();
+  </script>
+</body>
+</html>
